@@ -1,6 +1,6 @@
 # WaveMint AU Prototype
 
-This directory contains a **conceptual prototype** for the WaveMint Audio Unit (AUv3) plug-in that demonstrates how the creative-economy flows from the brief can be modelled in software. The objective is to give you an immediately hackable reference implementation you can open in Xcode, wire up to a JUCE host, or re-use as scaffolding when you are ready to ship production code.
+This document captures the conceptual prototype for the WaveMint Audio Unit (AUv3) plug-in that demonstrates how the creative-economy flows from the WaveMint brief can be modelled in software. The goal is to provide an immediately hackable reference implementation you can open in Xcode, wire up to a JUCE host, or reuse as scaffolding when you are ready to ship production code.
 
 > **Important:** This repository does not compile on its own inside this Linux-based environment—the Swift source is meant to be copied into a macOS/iOS AUv3 project. The Python microservice can be executed locally to simulate x402 testnet transactions and asset delivery from Backblaze B2.
 
@@ -18,7 +18,7 @@ This directory contains a **conceptual prototype** for the WaveMint Audio Unit (
 └────────────┬─────────────┘
              │ REST/WebSocket
 ┌────────────▼─────────────┐
-│  WaveMint Gateway API    │  ◄─ Python FastAPI mock in `/Backend`
+│  WaveMint Gateway API    │  ◄─ Python FastAPI mock in `Backend/`
 ├──────────────────────────┤
 │  x402 Testnet Client     │  ◄─ Simulated settlement + receipt
 ├──────────────────────────┤
@@ -31,9 +31,9 @@ This directory contains a **conceptual prototype** for the WaveMint Audio Unit (
 2. **User browses sounds** inside the AU plug-in. Preview streams are unauthenticated and low bitrate.
 3. When the user taps **“Unlock Stem”**, the plug-in:
    - Calls the gateway's `/transactions/prepare` endpoint.
-   - Gateway requests payment on the x402 testnet and returns a `payment_request` (Bolt11-like string) and ephemeral asset key.
+   - The gateway requests payment on the x402 testnet and returns a `payment_request` (Bolt11-like string) plus an ephemeral asset key.
 4. The plug-in uses a **Swift x402 client** (stubbed) to settle the invoice on testnet.
-5. Gateway validates the payment (mocked) and returns a signed Backblaze URL. The plug-in downloads the full-resolution audio into its sandbox and exposes it to the host.
+5. The gateway validates the payment (mocked) and returns a signed Backblaze URL. The plug-in downloads the full-resolution audio into its sandbox and exposes it to the host.
 6. Fee flow + payouts are logged so they can be replayed when the on-chain token launches.
 
 ## Contents
@@ -87,9 +87,9 @@ The script uploads your file to Backblaze, stores the metadata JSON in `Backend/
 ### 4. Wire the Swift sources into Xcode
 
 1. Create a new **Audio Unit App Extension** project.
-2. Replace the generated `AudioUnit.swift` and `ViewController.swift` with the files from `/Plugin`.
+2. Replace the generated `AudioUnit.swift` and `ViewController.swift` with the files from `Plugin/`.
 3. Add a Swift Package that wraps your actual x402 SDK once available. For now, the stub uses async `URLSession` calls to the Python gateway.
-4. Build & run inside AU Lab / Logic Pro to test unlocking flow.
+4. Build & run inside AU Lab / Logic Pro to test the unlocking flow.
 
 ### 5. Next steps
 - Swap the mock x402 client with a real SDK when the testnet endpoints are finalised.
